@@ -1,0 +1,148 @@
+@font-face {
+  font-family: RedHatText;
+  src: url(assets/fonts/RedHatText-VariableFont_wght.ttf);
+}
+* {
+  font-family: RedHatText, sans-serif;
+}
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: rgb(252, 248, 246);
+}
+
+header {
+  padding: 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 42px;
+}
+
+main {
+  display: flex;
+  padding: 20px;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  flex: 3;
+}
+
+.product {
+  background-color: #ffffff56;
+  border-radius: 10px;
+  padding: 20px;
+  width: calc(33.333% - 40px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #bb392d42;
+}
+
+.product img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.product h2 {
+  font-size: 1.2em;
+  margin: 0 0 10px;
+  text-align: center;
+}
+
+.product p {
+  margin: 0 0 10px;
+  color: #d43223;
+  font-weight: 800;
+}
+
+.product button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #e24a3c;
+  color: white;
+  border: none;
+  padding: 5px 15px 2px;
+  cursor: pointer;
+  border-radius: 60px;
+  margin-top: auto;
+}
+.product button img {
+  margin-top: 5px;
+}
+.product button span {
+  margin-top: -2px;
+}
+
+.product button:hover {
+  box-shadow: 0 0 5px #fd5748;
+  background-color: #ff4a3d;
+}
+
+.cart {
+  background-color: #fff;
+  /* border: 1px solid #ddd; */
+  box-shadow: 0 0 5px #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  margin-left: 20px;
+  flex: 1;
+}
+
+.cart h2 {
+  margin-top: 0;
+  color: #e24a3c;
+}
+
+.cart-items {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.confirm-order {
+  background-color: #e24a3c;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 30px;
+  width: 100%;
+}
+
+.confirm-order:hover {
+  background-color: #ff4a3d;
+}
+
+.remove-item:hover {
+  transition: 0.1s;
+  transform: scale(1.5);
+  cursor: pointer;
+}
