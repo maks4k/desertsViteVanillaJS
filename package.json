@@ -1,0 +1,26 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"npm run backend\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "backend": "json-server --watch db.json --port 3001",
+    "lint": "eslint"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "eslint": "^9.14.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.12.0",
+    "prettier": "^3.3.3",
+    "vite": "^5.4.10"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.0",
+    "json-server": "^1.0.0-beta.3"
+  }
+}
