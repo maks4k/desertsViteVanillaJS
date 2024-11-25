@@ -14,3 +14,10 @@ export default[
         },
     },
 ]
+module.exports = {
+    env: {
+        browser: true,
+        node: false,
+    },
+    // другие настройки
+};//совет из chatGpt что бы не подчеркивала fetch запросы Убедитесь, что ваш ESLint настроен на использование браузерной среды. В вашем файле `.eslintrc.js` добавьте:
