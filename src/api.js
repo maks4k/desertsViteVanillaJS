@@ -1,4 +1,3 @@
-
 export const getItems = async (url) => {
   try {
     const responce = await fetch(url);
@@ -12,7 +11,38 @@ export const getItems = async (url) => {
   }
 }; //класический fetc запрос на локальный сервис
 
-export const getItem=async (url) => {
+
+
+
+export const getItem = async (url) => {
+  try {
+    const responce = await fetch(url);
+    if (url.includes("cart")) {
+      if (!responce.ok) {
+     return null;
+      }
+      else{
+      const data = await responce.json();
+      return data;
+      } 
+    } else {
+      if (!responce.ok) {
+        throw new Error("ошибка запроса на сервер");
+      } //условия запрса на сервер ,что бы у cors всегда был статус 200(успешно)
+      const data = await responce.json();
+      return data;
+    }
+   
+  } catch (error) {
+    return error.message;
+  }
+}; //класический fetc запрос на локальный сер
+
+
+
+
+
+export const getItemFromCart = async (url) => {
   try {
     const responce = await fetch(url);
     if (!responce.ok) {
@@ -25,58 +55,43 @@ export const getItem=async (url) => {
   }
 }; //класический fetc запрос на локальный сер
 
-
-
-
-
-
-export const addItem=async(url,item)=>{
+export const addItem = async (url, item) => {
   try {
-  const responce=await fetch(url,{
-    method:"POST",//метод на сохранение данных
-    headers:{
-      "Content-type":"application/json"//тип контента который мы пердаем (json файл)
-    },
-    body:JSON.stringify(item)
-  });
-  if (!responce.ok) {
-    throw new Error("ошибка запроса");
-  }
-  return await responce.json();
+    const responce = await fetch(url, {
+      method: "POST", //метод на сохранение данных
+      headers: {
+        "Content-type": "application/json", //тип контента который мы пердаем (json файл)
+      },
+      body: JSON.stringify(item),
+    });
+    if (!responce.ok) {
+      throw new Error("ошибка запроса");
     }
-catch (error) {
-return error.message;
-  } 
-}//запрос на добавление товара
+    return await responce.json();
+  } catch (error) {
+    return error.message;
+  }
+}; //запрос на добавление товара
 
-
-
-
-
-export const removeItem=async(url)=>{
+export const removeItem = async (url) => {
   try {
-  const responce=await fetch(url,{
-    method:"DELETE",//метод на удаление данных
-  });
-  if (!responce.ok) {
-    throw new Error("ошибка запроса");
-  }
-  else{
-    return responce.ok
-  }
+    const responce = await fetch(url, {
+      method: "DELETE", //метод на удаление данных
+    });
+    if (!responce.ok) {
+      throw new Error("ошибка запроса");
+    } else {
+      return responce.ok;
     }
-catch (error) {
-return error.message;
-  } 
-}//запрос на удаление товара из корзины
-
+  } catch (error) {
+    return error.message;
+  }
+}; //запрос на удаление товара из корзины
 
 // removeItem("/api/1");
 
 // getItems("/api/products");
 // getItems("/api/cart");//запрос на корзину
-
-
 
 // const printItem = (item, parent, position) => {
 //   document.querySelector(parent).insertAdjacentHTML(position, item);

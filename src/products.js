@@ -1,5 +1,6 @@
-import { addItem, getItems } from "./api";
+import { getItems } from "./api";
 import { getItem } from "./api";
+import { renderCartItem } from "./cart";
 
 const productList= document
 .querySelector(".product-list")
@@ -24,7 +25,7 @@ const renderProducts=(async () => {
                 <span>Add to Cart</span>
               </button>
             </div>`,
-    );
+    );//дата арибут data-id="${product.id}
    
     productList.insertAdjacentHTML("beforeend", productsMarckUp.join(""));//применяем join ,что бы удалить запятые которые появились из-за метода map
 } else alert(responce);
@@ -36,15 +37,18 @@ const renderProducts=(async () => {
 const prepareProduct=async(e)=>{
 if (e.target.matches(".add-to-cart, .add-to-cart *")){
    const id=e.target.closest(".product").querySelector("button").dataset.id;
-   const product=await getItem(`/api/products/${id}`);//добираемся до товаров 
-   console.log(product);
-  const responce=await addItem("/api/cart",product);//отправляет fetc запрос методом POST на добавление товара в корзину
-  if (responce instanceof Object)//проверка на то пришел ли объект или нет
-  {
-    
-  }else{
-    alert(responce)
-  }
+   const responce=await getItem(`/api/products/${id}`);//добираемся до товаров (через jsonplaceholder обращаемся через апи/что то там/и подаставляем айдиншник товара на кторой кликнули)в данном моменте вызываются product
+   if (responce instanceof Object) {
+    return responce;
+   }else{
+    alert(responce);
+    return false;
+   }  
 }
 }
-productList.addEventListener("click",prepareProduct)
+productList.addEventListener("click", async(e)=>{const responce= await prepareProduct(e);
+  if (responce) {
+    const product=responce
+    renderCartItem(product)}//происходит последовательность действий сначала при клики выполняется prepareProduct.котороый выполняет свои деййствия и мы сохраняем их в константу а далее мы эти действия прокидываем в другую функци. из cart js
+  });
+ 
