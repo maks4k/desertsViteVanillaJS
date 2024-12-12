@@ -14,29 +14,14 @@ export const getItems = async (url) => {
 
 
 
-export const getItem = async (url) => {
-  try {
-    const responce = await fetch(url);
-    if (url.includes("cart")) {
-      if (!responce.ok) {
-     return null;
-      }
-      else{
-      const data = await responce.json();
-      return data;
-      } 
-    } else {
-      if (!responce.ok) {
-        throw new Error("ошибка запроса на сервер");
-      } //условия запрса на сервер ,что бы у cors всегда был статус 200(успешно)
-      const data = await responce.json();
-      return data;
-    }
-   
-  } catch (error) {
-    return error.message;
-  }
-}; //класический fetc запрос на локальный сер
+export const getItem = async (url,callback) => {
+try {
+  const responce=await fetch(url);
+  return await callback(responce)
+} catch (error) {
+  return error.message;
+}
+}; //универсальный фетч запрос который будет делать при одном урле одно действие и ппри другом другое(благодоря коллбэк функции)
 
 
 
@@ -65,7 +50,7 @@ export const addItem = async (url, item) => {
       body: JSON.stringify(item),
     });
     if (!responce.ok) {
-      throw new Error("ошибка запроса");
+      throw new Error("ошибка добавления");
     }
     return await responce.json();
   } catch (error) {
@@ -79,7 +64,7 @@ export const removeItem = async (url) => {
       method: "DELETE", //метод на удаление данных
     });
     if (!responce.ok) {
-      throw new Error("ошибка запроса");
+      throw new Error("ошибка удаления");
     } else {
       return responce.ok;
     }
@@ -87,6 +72,29 @@ export const removeItem = async (url) => {
     return error.message;
   }
 }; //запрос на удаление товара из корзины
+
+export const updateItem=async(url,patch)=>{
+  try {
+    const responce = await fetch(url, {
+      method: "PATCH", //метод на сохранение данных
+      headers: {
+        "Content-type": "application/json", //тип контента который мы пердаем (json файл)
+      },
+      body: JSON.stringify(patch),
+    });
+    if (!responce.ok) {
+      throw new Error("ошибка обновление");
+    }
+    return await responce.json();
+  } catch (error) {
+    return error.message;
+  }
+}//запрос на апдейт qty
+
+
+
+
+
 
 // removeItem("/api/1");
 
@@ -122,12 +130,12 @@ export const removeItem = async (url) => {
 // };
 
 // const asyncWraper = async () => {
-//   // const products = await getItems("http://localhost:3001/products");
-//   // productsHandler(products); //передаем в качестве параметра produts(ссылку на базу данных),проходисмся циклом по этшй базе данных и по каждому элементу product,отрисовываем в верстке те измениия product
+//   const products = await getItems("http://localhost:3001/products");
+//   productsHandler(products); //передаем в качестве параметра produts(ссылку на базу данных),проходисмся циклом по этшй базе данных и по каждому элементу product,отрисовываем в верстке те измениия product
 // };
 // asyncWraper();
 
-// 2 способ запусить аснхроность ,раньше синхроноссти через then
+// // 2 способ запусить аснхроность ,раньше синхроноссти через then
 
 // getItems("http://localhost:3001/products").then((products)=>{
 //   productsHandler(products);

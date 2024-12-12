@@ -37,7 +37,13 @@ const renderProducts=(async () => {
 const prepareProduct=async(e)=>{
 if (e.target.matches(".add-to-cart, .add-to-cart *")){
    const id=e.target.closest(".product").querySelector("button").dataset.id;
-   const responce=await getItem(`/api/products/${id}`);//добираемся до товаров (через jsonplaceholder обращаемся через апи/что то там/и подаставляем айдиншник товара на кторой кликнули)в данном моменте вызываются product
+   const responce=await getItem(`/api/products/${id}`,async(responce)=>{
+    if(!responce.ok){
+      throw new Error("Ошибка получения данных"); 
+    }
+    const data=await responce.json()
+    return data;
+   });//добираемся до товаров (через jsonplaceholder обращаемся через апи/что то там/и подаставляем айдиншник товара на кторой кликнули)в данном моменте вызываются product,так же добавили помимо url выполнение какой то callback функции
    if (responce instanceof Object) {
     return responce;
    }else{
@@ -46,7 +52,7 @@ if (e.target.matches(".add-to-cart, .add-to-cart *")){
    }  
 }
 }
-productList.addEventListener("click", async(e)=>{const responce= await prepareProduct(e);
+productList.addEventListener("click", async(e)=>{const responce=await prepareProduct(e);
   if (responce) {
     const product=responce
     renderCartItem(product)}//происходит последовательность действий сначала при клики выполняется prepareProduct.котороый выполняет свои деййствия и мы сохраняем их в константу а далее мы эти действия прокидываем в другую функци. из cart js
