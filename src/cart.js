@@ -1,7 +1,33 @@
-import {getItem,addItem, updateItem } from "./api";
+import {getItem,addItem, updateItem, getItems } from "./api";
+
+const renderCartItem=(item)=>{
+  const itemMarckup=`<li class="cart-item" data-id="${item.id}">
+  <img width="25%" src="${item.image.thumbnail}" alt="item">
+   <span>${item.name}</span>
+   <span><label class="quantity">${item.qty}</label> x <label class="price">$${item.price.toFixed(2)}</label></span>
+   <img class="remove-item" src="src/assets/icons/icon-remove-item.svg" alt="remove">
+  </li>`;
+  document.querySelector(".cart-items").insertAdjacentHTML("beforeend",itemMarckup);
+}//функция отрисовки товаров при добавлении в корзину
 
 
-export const renderCartItem=async(item)=>{
+const renderCart=async()=>{
+const responce=await getItems(`/api/cart`);
+if (Array.isArray(responce)&&responce.length>0)//проверка на то что есть какой то массив в dbjson cart
+{
+responce.forEach(item=>{
+  renderCartItem(item);
+})//запускаем форыч потому  что responce это масив объектов а rendercartitem ждет только 1 элемент
+}
+else if(!Array.isArray(responce)){
+alert(responce);
+}
+}
+
+
+
+
+export const handleCartItem=async(item)=>{
 const responce=await getItem(`/api/cart/${item.id}`,async(responce)=>{
   if (!responce.ok) {
     return null;
@@ -28,15 +54,12 @@ else{
   item.qty=1;
   const responceAdd=await addItem("/api/cart",item);//отправляет fetc запрос методом POST на добавление товара в корзину,в первые
   if (responceAdd instanceof Object) {
-    const itemMarckup=`<li class="cart-item" data-id="${item.id}">
-    <img width="25%" src="${item.image.thumbnail}" alt="item">
-     <span>${item.name}</span>
-     <span><label class="quantity">${item.qty}</label> x <label class="price">$${item.price.toFixed(2)}</label></span>
-     <img class="remove-item" src="src/assets/icons/icon-remove-item.svg" alt="remove">
-    </li>`;
-    document.querySelector(".cart-items").insertAdjacentHTML("beforeend",itemMarckup);
+    renderCartItem(item);
    }else{
     alert(responceAdd);
     return false;
    }    
 }}
+
+
+document.addEventListener("DOMContentLoaded",renderCart)//запускаем функции только тогда когда загрузился весь домконтент

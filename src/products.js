@@ -1,6 +1,6 @@
 import { getItems } from "./api";
 import { getItem } from "./api";
-import { renderCartItem } from "./cart";
+import { handleCartItem } from "./cart";
 
 const productList= document
 .querySelector(".product-list")
@@ -55,6 +55,6 @@ if (e.target.matches(".add-to-cart, .add-to-cart *")){
 productList.addEventListener("click", async(e)=>{const responce=await prepareProduct(e);
   if (responce) {
     const product=responce
-    renderCartItem(product)}//происходит последовательность действий сначала при клики выполняется prepareProduct.котороый выполняет свои деййствия и мы сохраняем их в константу а далее мы эти действия прокидываем в другую функци. из cart js
+    handleCartItem(product)}//происходит последовательность действий сначала при клики выполняется prepareProduct.котороый выполняет свои деййствия и мы сохраняем их в константу а далее мы эти действия прокидываем в другую функци. из cart js
   });
  
