@@ -110,18 +110,5 @@
     }
   ],
   "cart": [
-    {
-      "id": "3",
-      "image": {
-        "thumbnail": "./src/assets/images/image-macaron-thumbnail.jpg",
-        "mobile": "./src/assets/images/image-macaron-mobile.jpg",
-        "tablet": "./src/assets/images/image-macaron-tablet.jpg",
-        "desktop": "./src/assets/images/image-macaron-desktop.jpg"
-      },
-      "name": "Macaron Mix of Five",
-      "category": "Macaron",
-      "price": 8,
-      "qty": 23
-    }
   ]
 }

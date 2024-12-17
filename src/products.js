@@ -1,15 +1,22 @@
 import { getItems } from "./api";
 import { getItem } from "./api";
-import { handleCartItem } from "./cart";
+import { addCartItem } from "./cart";
 
 const productList= document
-.querySelector(".product-list")
-const renderProducts=(async () => {
-  const responce = await getItems("/api/products");
+.querySelector(".product-list");
 
+const getProducts=(async()=>{
+  const responce = await getItems("/api/products");
   if (Array.isArray(responce)&&responce.length>0)//проверяем на то что пришел масив и его длинна больше 0
-     {
-    const productsMarckUp = responce.map(
+    {
+    renderProducts(responce);
+  }
+  else
+  {alert(responce)};
+})
+();
+const renderProducts=async (products) => { 
+    const productsMarckUp =products.map(
       (product) =>`<div class="product">
         <picture>
         <source srcset="${product.image.desktop}" media="(min-width:1024px)">
@@ -21,15 +28,15 @@ const renderProducts=(async () => {
               <h2>${product.name}</h2>
               <span><i>Category:</i>${product.category}</span>
               <p>${product.price}</p>
-              <button class="add-to-cart" data-id="${product.id}"><img src="./src/assets/icons/icon-add-to-cart.svg" alt="">
-                <span>Add to Cart</span>
+              <button class="add-to-cart" data-id="${product.id}">
+              <img src="./src/assets/icons/icon-add-to-cart.svg" alt="">
+              <span>Add to Cart</span>
               </button>
             </div>`,
     );//дата арибут data-id="${product.id}
    
-    productList.insertAdjacentHTML("beforeend", productsMarckUp.join(""));//применяем join ,что бы удалить запятые которые появились из-за метода map
-} else alert(responce);
-})();//самовыызвающая функция
+  productList.insertAdjacentHTML("beforeend", productsMarckUp.join(""));//применяем join ,что бы удалить запятые которые появились из-за метода map
+};
 
 
 
@@ -55,6 +62,6 @@ if (e.target.matches(".add-to-cart, .add-to-cart *")){
 productList.addEventListener("click", async(e)=>{const responce=await prepareProduct(e);
   if (responce) {
     const product=responce
-    handleCartItem(product)}//происходит последовательность действий сначала при клики выполняется prepareProduct.котороый выполняет свои деййствия и мы сохраняем их в константу а далее мы эти действия прокидываем в другую функци. из cart js
+    addCartItem(product)}//происходит последовательность действий сначала при клики выполняется prepareProduct.котороый выполняет свои деййствия и мы сохраняем их в константу а далее мы эти действия прокидываем в другую функци. из cart js
   });
  

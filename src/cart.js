@@ -11,23 +11,32 @@ const renderCartItem=(item)=>{
 }//функция отрисовки товаров при добавлении в корзину
 
 
-const renderCart=async()=>{
+
+
+
+const getCartItems=async()=>{
 const responce=await getItems(`/api/cart`);
 if (Array.isArray(responce)&&responce.length>0)//проверка на то что есть какой то массив в dbjson cart
 {
-responce.forEach(item=>{
-  renderCartItem(item);
-})//запускаем форыч потому  что responce это масив объектов а rendercartitem ждет только 1 элемент
+return responce;
 }
 else if(!Array.isArray(responce)){
 alert(responce);
 }
+}//позволяет сохранять товар при перезагрузки страницы
+
+
+const updateCartQty=async(responce,item)=>{
+  responce.qty+=1;
+  const responceUpdate=await updateItem(`/api/cart/${item.id}`,{qty:responce.qty});//патч запрос 2 параметром принимает кол-во qty
+  if (responceUpdate instanceof Object) {
+    document.querySelector(`.cart-item[data-id="${item.id}"] .quantity`,).textContent=responce.qty;
+   }else{
+    alert(responceUpdate);
+   }   
 }
 
-
-
-
-export const handleCartItem=async(item)=>{
+export const addCartItem=async(item)=>{
 const responce=await getItem(`/api/cart/${item.id}`,async(responce)=>{
   if (!responce.ok) {
     return null;
@@ -37,18 +46,8 @@ const responce=await getItem(`/api/cart/${item.id}`,async(responce)=>{
     return data;
   }
 });//запрос на cart есть ли item с таким названием,теперь запрос по универсальной функции ,сюда втоырм параметром приходит коллбэк функция(переделывали на уроке)
-
-
 if (responce!==null) {
-responce.qty+=1;
-const responceUpdate=await updateItem(`/api/cart/${item.id}`,{qty:responce.qty});//патч запрос 2 параметром принимает кол-во qty
-if (responceUpdate instanceof Object) {
-  document.querySelector(`.cart-item[data-id="${item.id}"] .quantity`,).textContent=responce.qty;
- }else{
-  alert(responceUpdate);
-  return false;
- }   
- 
+  updateCartQty(responce,item);
 }
 else{
   item.qty=1;
@@ -62,4 +61,12 @@ else{
 }}
 
 
-document.addEventListener("DOMContentLoaded",renderCart)//запускаем функции только тогда когда загрузился весь домконтент
+document.addEventListener("DOMContentLoaded",async()=>{
+const items=await getCartItems();
+if (items)
+ {
+  items.forEach(item=>{
+  renderCartItem(item);
+  })//запускаем форыч потому  что responce это масив объектов а rendercartitem ждет только 1 элемент
+}
+})//запускаем функции только тогда когда загрузился весь домконтент
