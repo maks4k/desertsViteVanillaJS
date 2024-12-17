@@ -12,18 +12,33 @@ const renderCartItem=(item)=>{
 
 
 
-
-
 const getCartItems=async()=>{
-const responce=await getItems(`/api/cart`);
-if (Array.isArray(responce)&&responce.length>0)//проверка на то что есть какой то массив в dbjson cart
-{
-return responce;
+  const responce=await getItems(`/api/cart`);
+  if (Array.isArray(responce)&&responce.length>0)//проверка на то что есть какой то массив в dbjson cart
+  {
+  return responce;
+  }
+  else if(!Array.isArray(responce)){
+  alert(responce);
+  }
+  }//получает товары из корзины и позволяет сохранять товар при перезагрузки страницы
+  
+
+
+const updateTotals=async()=>{
+const cart=await getCartItems();
+if (cart) {
+document.querySelector(".cart-count").textContent=cart.reduce((count,item)=>{
+return count+item.qty;
+},0);
+
+document.querySelector(".total-price").textContent=`$`+cart.reduce((summ,item)=>{
+return summ+item.qty*item.price;
+},0).toFixed(2)
 }
-else if(!Array.isArray(responce)){
-alert(responce);
-}
-}//позволяет сохранять товар при перезагрузки страницы
+}//считает и выводит сумму товаров и кол-во
+
+
 
 
 const updateCartQty=async(responce,item)=>{
@@ -58,7 +73,9 @@ else{
     alert(responceAdd);
     return false;
    }    
-}}
+}
+updateTotals();
+}
 
 
 document.addEventListener("DOMContentLoaded",async()=>{
@@ -68,5 +85,6 @@ if (items)
   items.forEach(item=>{
   renderCartItem(item);
   })//запускаем форыч потому  что responce это масив объектов а rendercartitem ждет только 1 элемент
+  
 }
 })//запускаем функции только тогда когда загрузился весь домконтент
