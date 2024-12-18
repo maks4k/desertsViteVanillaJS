@@ -65,13 +65,16 @@ export const removeItem = async (url) => {
     });
     if (!responce.ok) {
       throw new Error("ошибка удаления");
-    } else {
-      return responce.ok;
     }
+ return await responce.json()
   } catch (error) {
     return error.message;
   }
 }; //запрос на удаление товара из корзины
+
+
+
+
 
 export const updateItem=async(url,patch)=>{
   try {
@@ -93,6 +96,46 @@ export const updateItem=async(url,patch)=>{
 
 
 
+
+
+export const removeOrUpdateItem=async(url)=>{
+  const responce=await getItem(url,async(responce)=>{
+      if (!responce.ok) {
+       throw new Error("Ошибка получения данных")
+      }
+      else{
+        const data=await responce.json();
+        return data;
+      }
+  })
+  if (responce instanceof Object) {
+    if (responce.qty>1) {
+  const newQty=responce.qty-1;
+  const responceUpdate=await updateItem(url,{qty:newQty});
+  if (responceUpdate instanceof Object) { 
+    return {
+      achion:"update",
+      item:responceUpdate}; 
+   }
+   else{
+     alert(responceUpdate);
+   }
+    }
+    else{
+    const responceRemove=await removeItem(url);
+    if (responceRemove instanceof Object) {
+     return {
+      achion:"remove",
+      item:responceRemove}; 
+    }
+    else{
+      alert(responceRemove);
+    }
+    }
+   }else{
+    alert(responce);
+   }    
+  }//функция которая будет убирать qty для постепенного удаления из корзины
 
 
 

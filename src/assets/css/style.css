@@ -115,6 +115,7 @@ main {
 .cart-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
   border-bottom: 1px solid #eee;
   padding: 10px 0;
@@ -145,4 +146,26 @@ main {
   transition: 0.1s;
   transform: scale(1.5);
   cursor: pointer;
+}
+/* notifchaion */
+.notoficathion{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: greenyellow;
+  color: #fff;
+  padding:10px 20px ;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  transform: translateX(20px);
+  transition:opacity 0.3s,
+            transform 0.3s;
+}
+.notoficathion.show{
+opacity: 1;
+transform: translateX(0);
+}
+.notoficathion.hidden{
+ display: none;
 }

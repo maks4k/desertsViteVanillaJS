@@ -1,4 +1,6 @@
-import {getItem,addItem, updateItem, getItems } from "./api";
+import {getItem,addItem, updateItem, getItems, removeOrUpdateItem, removeItem } from "./api";
+import {showNotificathion} from"./alerts";
+
 
 const renderCartItem=(item)=>{
   const itemMarckup=`<li class="cart-item" data-id="${item.id}">
@@ -27,14 +29,19 @@ const getCartItems=async()=>{
 
 const updateTotals=async()=>{
 const cart=await getCartItems();
+const cartCount=document.querySelector(".cart-count");
+const totalPrice=document.querySelector(".total-price")
 if (cart) {
-document.querySelector(".cart-count").textContent=cart.reduce((count,item)=>{
+cartCount.textContent=cart.reduce((count,item)=>{
 return count+item.qty;
 },0);
 
-document.querySelector(".total-price").textContent=`$`+cart.reduce((summ,item)=>{
+totalPrice.textContent=`$`+cart.reduce((summ,item)=>{
 return summ+item.qty*item.price;
 },0).toFixed(2)
+}else{
+cartCount.textContent="0";
+totalPrice.textContent="$0.00"
 }
 }//считает и выводит сумму товаров и кол-во
 
@@ -77,6 +84,37 @@ else{
 updateTotals();
 }
 
+
+const removeCartItem=async(event)=>{
+if (event.target.matches(".remove-item")) {
+  const cartItem=event.target.closest(".cart-item")
+  const id=cartItem.dataset.id;
+const updateItem=await removeOrUpdateItem(`/api/cart/${id}`);
+if (updateItem&&updateItem.achion==="update") {
+  cartItem.querySelector(".quantity").textContent=updateItem.item.qty;
+}else if(updateItem&&updateItem.achion==="remove")
+{
+  event.target.closest(".cart-item").remove();//удалили товар
+}
+updateTotals();
+  }
+}
+document.querySelector(".cart-items").addEventListener("click",(event)=>{
+  removeCartItem(event);
+  showNotificathion("Товар удален");
+});//надо передать везде event потому что появилась обретка
+
+document.querySelector(".confirm-order").addEventListener("click",async()=>{
+const cart=await getCartItems()
+  if (cart) {
+    cart.forEach(async(item)=>await removeItem(`/api/cart/${item.id}`));//удаление товара из бэкэнда
+    document.querySelector(".cart-items").innerHTML="";//очистка ui
+    updateTotals();
+    alert("Спасибо заказ оформлен")
+  }else{
+    alert("Ваша корзина пуста")
+  }
+})
 
 document.addEventListener("DOMContentLoaded",async()=>{
 const items=await getCartItems();
