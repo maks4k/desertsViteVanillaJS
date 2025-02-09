@@ -9,6 +9,7 @@ server: {
          changeOrigin:true,
          rewrite:(path)=>path.replace(/^\/api/,"")
       },
-   }, 
+   },
+   base: ' https://maks4k.github.io/desertsViteVanillaJS/', 
    }
 })//изменили запрос на url через прокси 
